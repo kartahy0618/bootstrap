@@ -118,29 +118,33 @@
         <!-- 聯絡我們 -->
         <div class="aboutus pb-5">
             <h1>聯絡我們</h1>
-            <form>
+            <form id="contact-form">
+                <input type="hidden" name="contact_number">
+
                 <div class="form-group row">
-                    <label for="inputEmail3" class="col-sm-4 col-form-label text-center">姓名</label>
+                    <label for="inputEmail3" class="col-sm-4 col-form-label text-center">姓名<span
+                            style="color:red ">*</span></label>
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="inputEmail3" placeholder="請輸入姓名">
+                        <input type="text" name="user_name" class="form-control" id="inputEmail3" placeholder="請輸入姓名" required>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="inputPassword3" class="col-sm-4 col-form-label text-center">信箱</label>
                     <div class="col-sm-8">
-                        <input type="email" class="form-control" id="inputPassword3" placeholder="請輸入信箱">
+                        <input type="email" name="user_eamil" class="form-control" id="inputPassword3" placeholder="請輸入信箱">
                     </div>
                 </div>
                 <fieldset class="form-group row">
                     <legend class="col-form-label col-sm-4 float-sm-left pt-0 text-center">請輸入你的建議</legend>
                     <div class="col-sm-8">
-                        <textarea name="" id="" class="w-100" placeholder="請輸入訊息"></textarea>
+                        <textarea name="user_content" id="" class="w-100" placeholder="請輸入訊息"></textarea>
                     </div>
                 </fieldset>
 
                 <div class="form-group row justify-content-center text-center">
                     <div class="col-sm-10">
-                        <button type="submit" class="btn btn-primary">送出</button>
+                        <button type="reset" class="btn btn-primary">清除</button>
+                        <button type="submit" id="sentemail" class=" btn btn-primary" >送出</button>
                     </div>
                 </div>
             </form>
@@ -148,11 +152,11 @@
 
         <iframe
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d115753.6537934119!2d121.48712126971795!3d24.95584856822537!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3468018789e88f2d%3A0x99c5d97207d24208!2z56Kn5r2t6aKo5pmv5Y2A!5e0!3m2!1szh-TW!2stw!4v1668311194729!5m2!1szh-TW!2stw"
-            style="height: 400px;" allowfullscreen="" loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade" class="w-100 "></iframe>
-<footer class="text-center py-5 text-light"style="background-color:#343a40;">
-    <p>Copyright © 2020 James 版權所有</p>
-</footer>           
+            style="height: 400px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+            class="w-100 "></iframe>
+        <footer class="text-center py-5 text-light" style="background-color:#343a40;">
+            <p>Copyright © 2020 James 版權所有</p>
+        </footer>
 
     </div>
 
@@ -165,6 +169,41 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"
         integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+"
         crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function () {
+            // https://dashboard.emailjs.com/admin/account
+            emailjs.init('PP8EBFlfKO6bWYjSd');
+        })();
+    </script>
+    <script type="text/javascript">
+        window.onload = function () {
+            document.getElementById('contact-form').addEventListener('submit', function (event) {
+                event.preventDefault();
+                // generate a five digit number for the contact_number variable
+                this.contact_number.value = Math.random() * 100000 | 0;
+                // these IDs from the previous steps
+                emailjs.sendForm('service_ckchar9', 'template_8pz1ahk', this)
+                    .then(function () {
+                        console.log('成功！');
+                        // 成功後清除
+                        document.getElementById("contact-form").reset();
+                    // 提示成功送出訊息
+                    alert("信件送出")
+                    // disabled禁止使用
+                    document.getElementById('sentemail').disabled=true;
+                    // 計時器
+                    setTimeout(function(){
+                        // 讀秒後要執行的事情
+                        document.getElementById('sentemail').disabled=false;
+                    },5000)
+                    }, function (error) {
+                        console.log('失敗...', error);
+                    });
+            });
+        }
+    </script>
 </body>
 
 </html>
